@@ -363,4 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # My
+.idea/
 appsettings.Development.json
+MedicalResearch/Properties/launchSettings.json

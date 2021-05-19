@@ -1,78 +1,83 @@
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
-using MedicalResearch.Models;
-using MedicalResearch.Requests;
+using MedicalResearch.Configuration;
+using MedicalResearch.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace MedicalResearch
 {
-	public class Startup
-	{
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>();
 
-		public IConfiguration Configuration { get; }
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddDbContext<ApplicationDbContext>();
-			
-			services.AddMediatR(Assembly.GetExecutingAssembly());
-			
-			services.AddAutoMapper();
-			
-			services.AddHttpContextAccessor();
+            services.AddAutoMapper();
 
-			services.AddScoped<IUserClaimsPrincipalFactory<User>, ClaimsPrincipalFactory>();
+            services.AddHttpContextAccessor();
 
-			services.AddPasswordPolicy();
+            services.AddIdentityAndPasswordPolicy();
 
-			services.AddControllers()
-				.AddFluentValidation();
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
-			services.AddValidators();
+            services.AddJsonStringEnumConverter();
 
-			services.AddJsonStringEnumConverter();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
-			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-				.AddCookie();
+            services.ConfigureResponseStatusCodes();
 
-			services.ConfigureResponseStatusCodes();
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+            });
 
-			services.AddSwagger();
-		}
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MedicalResearch v1"));
-			}
+            services.AddSwagger();
+        }
 
-			app.UseHttpsRedirection();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(opt =>
+                {
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        opt.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant());
+                    }
+                });
+            }
 
-			app.UseRouting();
+            app.UseHttpsRedirection();
 
-			app.UseAuthentication();
+            app.UseRouting();
 
-			app.UseAuthorization();
+            app.UseAuthentication();
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapControllers();
-			});
-		}
-	}
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+    }
 }
