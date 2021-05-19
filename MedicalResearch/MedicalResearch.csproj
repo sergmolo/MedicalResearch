@@ -32,8 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-    <Folder Include="Properties\" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
 
 </Project>

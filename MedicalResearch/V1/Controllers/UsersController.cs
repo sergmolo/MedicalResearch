@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MedicalResearch.Business.Commands.Users;
 using MedicalResearch.Business.Queries.Users;
-using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Attributes;
+using MedicalResearch.Business.Models;
+using MedicalResearch.Data.Enums;
 
 namespace MedicalResearch.V1.Controllers
 {

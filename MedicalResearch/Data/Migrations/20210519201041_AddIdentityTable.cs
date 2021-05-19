@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MedicalResearch.Data.Migrations
+namespace MedicalResearch.Business.Migrations
 {
-    public partial class Users : Migration
+    public partial class AddIdentityTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalResearch.Business.Queries.Users;
-using MedicalResearch.Data;
 using MedicalResearch.V1.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Data;
 
 namespace MedicalResearch.Business.Handlers.Users
 {

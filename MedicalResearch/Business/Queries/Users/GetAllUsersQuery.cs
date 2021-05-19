@@ -6,6 +6,5 @@ namespace MedicalResearch.Business.Queries.Users
 {
     public class GetAllUsersQuery : IRequest<IEnumerable<UserResponse>>
     {
-
     }
 }

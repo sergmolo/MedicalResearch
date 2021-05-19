@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using MedicalResearch.Data.Entities;
-using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using System;
-using System.Linq;
+using MedicalResearch.Data.Entities;
+using MedicalResearch.Data.Enums;
 
 namespace MedicalResearch.MapperProfiles
 {

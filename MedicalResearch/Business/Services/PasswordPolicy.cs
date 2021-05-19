@@ -1,14 +1,13 @@
-﻿using MedicalResearch.Data.Entities;
-using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
-namespace MedicalResearch
+namespace MedicalResearch.Business.Services
 {
-    public class PasswordPolicy : PasswordValidator<User>
+    public class PasswordPolicy<TUser> : PasswordValidator<TUser> where TUser : class
     {
-        public override async Task<IdentityResult> ValidateAsync(UserManager<User> manager, User user, string password)
+        public override async Task<IdentityResult> ValidateAsync(UserManager<TUser> manager, TUser user, string password)
         {
             var result = await base.ValidateAsync(manager, user, password);
             var errors = result.Succeeded ? new List<IdentityError>() : result.Errors.ToList();
@@ -22,7 +21,7 @@ namespace MedicalResearch
                 });
             }
 
-            return errors.Count == 0 ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
+            return !errors.Any() ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
         }
     }
 }

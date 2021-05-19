@@ -1,22 +1,32 @@
 using FluentValidation.AspNetCore;
 using MediatR;
-using MedicalResearch.Configuration;
-using MedicalResearch.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
+using MedicalResearch.Data;
+using MedicalResearch.Extensions;
 
 namespace MedicalResearch
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>();
+            services.AddDbContext<ApplicationDbContext>(opt =>
+                opt.UseNpgsql(Configuration.GetConnectionString("ApplicationContext")));
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -55,6 +65,7 @@ namespace MedicalResearch
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
+
                 app.UseSwaggerUI(opt =>
                 {
                     foreach (var description in provider.ApiVersionDescriptions)

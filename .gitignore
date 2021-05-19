@@ -364,5 +364,5 @@ FodyWeavers.xsd
 
 # My
 .idea/
-appsettings.Development.json
-MedicalResearch/Properties/launchSettings.json
+**/appsettings.Development.json
+**/launchSettings.json

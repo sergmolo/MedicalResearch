@@ -1,21 +1,21 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using AutoMapper;
+using MedicalResearch.Business.Services;
 using MedicalResearch.Data;
 using MedicalResearch.Data.Entities;
 using MedicalResearch.MapperProfiles;
+using MedicalResearch.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace MedicalResearch.Configuration
+namespace MedicalResearch.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -94,14 +94,14 @@ namespace MedicalResearch.Configuration
 
         public static IServiceCollection AddIdentityAndPasswordPolicy(this IServiceCollection services)
         {
-            services.AddTransient<IPasswordValidator<User>, PasswordPolicy>();
+            services.AddTransient<IPasswordValidator<User>, PasswordPolicy<User>>();
 
             services.AddIdentityCore<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
+                .AddClaimsPrincipalFactory<ClaimsPrincipalFactory>()
+                .AddUserManager<NoUserClaimsUserManager<User>>()
                 .AddDefaultTokenProviders();
-
-            services.AddScoped<IUserClaimsPrincipalFactory<User>, ClaimsPrincipalFactory>();
 
             services.Configure<IdentityOptions>(options =>
             {

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MedicalResearch.Business.Models;
 using MedicalResearch.V1.Requests;
 
 namespace MedicalResearch.Business.Commands.Users

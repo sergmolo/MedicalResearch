@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Data.Entities;
 
-namespace MedicalResearch.Commands.Users
+namespace MedicalResearch.Business.Handlers.Users
 {
     public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, IdentityResult>
     {

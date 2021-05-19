@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalResearch.Business.Queries.Users;
-using MedicalResearch.Data;
-using MedicalResearch.Data.Entities;
 using MedicalResearch.V1.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Data;
+using MedicalResearch.Data.Entities;
 
-namespace MedicalResearch.Handlers.Users
+namespace MedicalResearch.Business.Handlers.Users
 {
     public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserResponse>
     {
@@ -25,6 +25,7 @@ namespace MedicalResearch.Handlers.Users
         {
             User user = await _dbContext.Users.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id.Equals(request.Id), cancellationToken);
+            
             return _mapper.Map<UserResponse>(user);
         }
     }

@@ -1,14 +1,16 @@
 ﻿using MediatR;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Data.Entities;
-using MedicalResearch.Data.Enums;
+using MedicalResearch.Business.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Business.Models;
+using MedicalResearch.Data.Entities;
+using MedicalResearch.Data.Enums;
 
-namespace MedicalResearch.Handlers.Users
+namespace MedicalResearch.Business.Handlers.Users
 {
     public class RemoveUserHandler : IRequestHandler<RemoveUserCommand, CommandResult>
     {
@@ -26,15 +28,13 @@ namespace MedicalResearch.Handlers.Users
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = await _userManager.FindByIdAsync(userId);
             var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole(Role.Administrator.ToString());
-            if (isAdmin.HasValue && !isAdmin.Value)
-            {
-                user.IsRemoved = true;
-                await _userManager.UpdateAsync(user);
+            
+            if (!isAdmin.HasValue || isAdmin.Value) return new CommandResult(CommandErrorCode.YouAreAdmin);
+            
+            user.IsRemoved = true;
+            await _userManager.UpdateAsync(user);
 
-                return new CommandResult();
-            }
-
-            return new CommandResult(CommandError.YouAreAdmin);
+            return new CommandResult();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace MedicalResearch.Data.Enums
+﻿namespace MedicalResearch.Business.Enums
 {
-    public enum CommandError
+    public enum CommandErrorCode
     {
         DbError = 1,
         UserNotFound = 2,

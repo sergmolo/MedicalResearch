@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Data.Entities;
-using MedicalResearch.Data.Enums;
+using MedicalResearch.Business.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MedicalResearch.Business.Models;
+using MedicalResearch.Data.Entities;
 
-namespace MedicalResearch.Handlers.Users
+namespace MedicalResearch.Business.Handlers.Users
 {
     public class LoginUserHandler : IRequestHandler<LoginUserCommand, CommandResult>
     {
@@ -26,17 +27,17 @@ namespace MedicalResearch.Handlers.Users
         public async Task<CommandResult> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.Model.Email);
-            if (user == null) return new CommandResult(CommandError.UserNotFound);
-            if (user.IsRemoved) return new CommandResult(CommandError.UserRemoved);
+            if (user == null) return new CommandResult(CommandErrorCode.UserNotFound);
+            if (user.IsRemoved) return new CommandResult(CommandErrorCode.UserRemoved);
 
             if (!(await _signInManager.CheckPasswordSignInAsync(user, request.Model.Password, true)).Succeeded)
-                return new CommandResult(CommandError.WrongEmailOrPassword);
+                return new CommandResult(CommandErrorCode.WrongEmailOrPassword);
 
-            var PasswordExpireMonth = int.Parse(_configuration["PasswordExpireMonth"]);
+            var passwordExpireMonth = int.Parse(_configuration["PasswordExpireMonth"]);
 
-            if (user.PasswordCreatedAt.AddMonths(PasswordExpireMonth) < DateTime.UtcNow)
+            if (user.PasswordCreatedAt.AddMonths(passwordExpireMonth) < DateTime.UtcNow)
             {
-                return new CommandResult(CommandError.PasswordExpired);
+                return new CommandResult(CommandErrorCode.PasswordExpired);
             }
 
             var res = await _signInManager.PasswordSignInAsync(
@@ -45,12 +46,7 @@ namespace MedicalResearch.Handlers.Users
                 request.Model.RememberMe,
                 false);
 
-            if (res.Succeeded)
-            {
-                return new CommandResult();
-            }
-            
-            return new CommandResult(CommandError.WrongEmailOrPassword);
+            return res.Succeeded ? new CommandResult() : new CommandResult(CommandErrorCode.WrongEmailOrPassword);
         }
     }
 }
