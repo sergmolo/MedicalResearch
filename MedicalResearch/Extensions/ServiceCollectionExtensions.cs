@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using MedicalResearch.Business.Services;
@@ -34,73 +33,44 @@ namespace MedicalResearch.Extensions
             return services;
         }
 
-        public static IServiceCollection ConfigureResponseStatusCodes(this IServiceCollection services)
-        {
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-
-                    return Task.CompletedTask;
-                };
-                options.Events.OnRedirectToAccessDenied = context =>
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-
-                    return Task.CompletedTask;
-                };
-            });
-
-            return services;
-        }
-
         public static IServiceCollection AddAuthenticationSchemes(this IServiceCollection services)
         {
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
             })
             .AddCookie(IdentityConstants.ApplicationScheme, o =>
             {
                 o.Events = new CookieAuthenticationEvents
                 {
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync,
+                    OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+                        return Task.CompletedTask;
+                    },
+                    OnRedirectToAccessDenied = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+
+                        return Task.CompletedTask;
+                    }
                 };
-            })
-            .AddCookie(IdentityConstants.ExternalScheme, o =>
-            {
-                o.Cookie.Name = IdentityConstants.ExternalScheme;
-                o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            })
-            .AddCookie(IdentityConstants.TwoFactorRememberMeScheme, o =>
-            {
-                o.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme;
-                o.Events = new CookieAuthenticationEvents
-                {
-                    OnValidatePrincipal = SecurityStampValidator.ValidateAsync<ITwoFactorSecurityStampValidator>
-                };
-            })
-            .AddCookie(IdentityConstants.TwoFactorUserIdScheme, o =>
-            {
-                o.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
-                o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
 
             return services;
         }
 
-        public static IServiceCollection AddIdentityAndPasswordPolicy(this IServiceCollection services)
+        public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
             services.AddTransient<IPasswordValidator<User>, PasswordPolicy<User>>();
 
             services.AddIdentityCore<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddSignInManager()
+                .AddSignInManager<ApplicationSignInManager<User>>()
                 .AddClaimsPrincipalFactory<ClaimsPrincipalFactory>()
-                .AddUserManager<NoUserClaimsUserManager<User>>()
+                .AddUserManager<ApplicationUserManager<User>>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -131,7 +101,6 @@ namespace MedicalResearch.Extensions
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-
             services.AddSwaggerGen();
 
             return services;

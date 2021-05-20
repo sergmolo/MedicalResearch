@@ -23,8 +23,8 @@ namespace MedicalResearch.Business.Handlers.Users
 
         public async Task<UserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            User user = await _dbContext.Users.AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id.Equals(request.Id), cancellationToken);
+            var user = await _dbContext.Users.AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
             
             return _mapper.Map<UserResponse>(user);
         }

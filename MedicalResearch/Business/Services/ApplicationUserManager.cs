@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace MedicalResearch.Business.Services
 {
-    public class NoUserClaimsUserManager<TUser> : UserManager<TUser> where TUser : class
+    public class ApplicationUserManager<TUser> : UserManager<TUser> where TUser : class
     {
-        public NoUserClaimsUserManager(
+        public ApplicationUserManager(
                 IUserStore<TUser> store,
                 IOptions<IdentityOptions> optionsAccessor,
                 IPasswordHasher<TUser> passwordHasher,

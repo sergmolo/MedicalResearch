@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using MedicalResearch.Attributes;
 using MedicalResearch.Business.Models;
 using MedicalResearch.Data.Enums;
+using System.Security.Claims;
 
 namespace MedicalResearch.V1.Controllers
 {
@@ -57,7 +58,8 @@ namespace MedicalResearch.V1.Controllers
         [HttpGet]
         public async Task<UserResponse> Get(CancellationToken ct)
         {
-            return await _mediator.Send(new GetCurrentUserQuery(), ct);
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            return await _mediator.Send(new GetUserByIdQuery(userId), ct);
         }
 
         [HttpPut]

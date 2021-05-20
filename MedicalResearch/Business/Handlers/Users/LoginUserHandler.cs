@@ -30,23 +30,18 @@ namespace MedicalResearch.Business.Handlers.Users
             if (user == null) return new CommandResult(CommandErrorCode.UserNotFound);
             if (user.IsRemoved) return new CommandResult(CommandErrorCode.UserRemoved);
 
-            if (!(await _signInManager.CheckPasswordSignInAsync(user, request.Model.Password, true)).Succeeded)
-                return new CommandResult(CommandErrorCode.WrongEmailOrPassword);
+            var passwordCheck = (await _signInManager.CheckPasswordSignInAsync(user, request.Model.Password, true)).Succeeded;
+            if (!passwordCheck) return new CommandResult(CommandErrorCode.WrongEmailOrPassword);
 
             var passwordExpireMonth = int.Parse(_configuration["PasswordExpireMonth"]);
-
             if (user.PasswordCreatedAt.AddMonths(passwordExpireMonth) < DateTime.UtcNow)
             {
                 return new CommandResult(CommandErrorCode.PasswordExpired);
             }
 
-            var res = await _signInManager.PasswordSignInAsync(
-                request.Model.Email,
-                request.Model.Password,
-                request.Model.RememberMe,
-                false);
+            await _signInManager.SignInAsync(user, request.Model.RememberMe);
 
-            return res.Succeeded ? new CommandResult() : new CommandResult(CommandErrorCode.WrongEmailOrPassword);
+            return new CommandResult();
         }
     }
 }

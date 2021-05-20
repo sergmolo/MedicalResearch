@@ -1,6 +1,5 @@
 using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -16,17 +15,17 @@ namespace MedicalResearch
 {
     public class Startup
     {
-        private IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(opt =>
-                opt.UseNpgsql(Configuration.GetConnectionString("ApplicationContext")));
+                opt.UseNpgsql(_configuration.GetConnectionString("ApplicationContext")));
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -34,16 +33,12 @@ namespace MedicalResearch
 
             services.AddHttpContextAccessor();
 
-            services.AddIdentityAndPasswordPolicy();
+            services.AddIdentity();
 
             services.AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddJsonStringEnumConverter();
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-
-            services.ConfigureResponseStatusCodes();
 
             services.AddApiVersioning(options =>
             {

@@ -6,11 +6,11 @@ namespace MedicalResearch.Business.Models
 {
     public class CommandResult
     {
-        private readonly List<CommandError> errors = new();
+        private readonly List<CommandError> _errors = new();
 
-        public List<CommandError> Errors { get => errors; }
+        public List<CommandError> Errors { get => _errors; }
 
-        public bool Succeeded => !errors.Any();
+        public bool Succeeded => !_errors.Any();
 
         public CommandResult()
         {
@@ -18,12 +18,12 @@ namespace MedicalResearch.Business.Models
 
         public CommandResult(CommandErrorCode errorCode)
         {
-            errors.Add(new CommandError((int)errorCode, errorCode.ToString()));
+            _errors.Add(new CommandError((int)errorCode, errorCode.ToString()));
         }
 
         public CommandResult(IEnumerable<CommandErrorCode> errorCodes)
         {
-            errors.AddRange(errorCodes.Select(e => new CommandError((int)e, e.ToString())));
+            _errors.AddRange(errorCodes.Select(e => new CommandError((int)e, e.ToString())));
         }
     }
 }

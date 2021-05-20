@@ -15,11 +15,11 @@ namespace MedicalResearch.Business.Services
 
         public override async Task<ClaimsPrincipal> CreateAsync(User user)
         {
-            ClaimsPrincipal principal = await base.CreateAsync(user);
+            var principal = await base.CreateAsync(user);
             
-            var role = user.Role.ToString();
             if (principal?.Identity is not null)
             {
+                var role = user.Role.ToString();
                 ((ClaimsIdentity)principal.Identity).AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
