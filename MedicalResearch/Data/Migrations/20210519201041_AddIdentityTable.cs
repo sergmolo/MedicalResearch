@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MedicalResearch.Business.Migrations
+namespace MedicalResearch.Data.Migrations
 {
     public partial class AddIdentityTable : Migration
     {
