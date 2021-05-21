@@ -8,6 +8,12 @@ namespace MedicalResearch.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.Property(p => p.UserName)
+                .IsRequired();
+
+            builder.Property(p => p.Email)
+                .IsRequired();
+
             builder.ToTable("Users");
         }
     }

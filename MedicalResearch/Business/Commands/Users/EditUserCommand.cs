@@ -6,10 +6,13 @@ namespace MedicalResearch.Business.Commands.Users
 {
     public class EditUserCommand : IRequest<CommandResult>
     {
+        public int UserId { get; }
+
         public EditUserRequest Model { get; }
 
-        public EditUserCommand(EditUserRequest model)
+        public EditUserCommand(int userId, EditUserRequest model)
         {
+            UserId = userId;
             Model = model;
         }
     }

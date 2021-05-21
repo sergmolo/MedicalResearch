@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using MedicalResearch.Business.Commands.Users;
+using MedicalResearch.Business.Models;
 using MedicalResearch.V1.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
-using MedicalResearch.Business.Models;
 
 namespace MedicalResearch.V1.Controllers
 {

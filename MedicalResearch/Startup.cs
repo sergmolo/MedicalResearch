@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using MedicalResearch.Data;
 using MedicalResearch.Extensions;
+using MedicalResearch.Business.Models;
 
 namespace MedicalResearch
 {
@@ -32,6 +33,8 @@ namespace MedicalResearch
             services.AddAutoMapper();
 
             services.AddHttpContextAccessor();
+
+            services.Configure<AuthOptions>(_configuration.GetSection(AuthOptions.Section));
 
             services.AddIdentity();
 

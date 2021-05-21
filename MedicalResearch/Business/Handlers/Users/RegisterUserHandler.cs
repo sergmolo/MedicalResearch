@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalResearch.Business.Commands.Users;
+using MedicalResearch.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using System.Threading.Tasks;
-using MedicalResearch.Data.Entities;
 
 namespace MedicalResearch.Business.Handlers.Users
 {

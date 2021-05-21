@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using System.Threading.Tasks;
 using MedicalResearch.Data.Entities;
+using MedicalResearch.Business.Models;
 
 namespace MedicalResearch.Business.Handlers.Users
 {
-    public class LogoutUserHandler : IRequestHandler<LogoutUserCommand>
+    public class LogoutUserHandler : IRequestHandler<LogoutUserCommand, CommandResult>
     {
         private readonly SignInManager<User> _signInManager;
 
@@ -16,11 +17,11 @@ namespace MedicalResearch.Business.Handlers.Users
             _signInManager = signInManager;
         }
 
-        public async Task<Unit> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
         {
             await _signInManager.SignOutAsync();
             
-            return default;
+            return CommandResult.Success();
         }
     }
 }

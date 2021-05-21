@@ -6,24 +6,39 @@ namespace MedicalResearch.Business.Models
 {
     public class CommandResult
     {
-        private readonly List<CommandError> _errors = new();
+        private readonly List<object> _errors = new();
 
-        public List<CommandError> Errors { get => _errors; }
+        public List<object> Errors { get => _errors; }
 
-        public bool Succeeded => !_errors.Any();
+        public bool Succeeded { get; }
 
-        public CommandResult()
+        private CommandResult(bool succeeded)
         {
+            Succeeded = succeeded;
         }
 
-        public CommandResult(CommandErrorCode errorCode)
+        public static CommandResult Success()
         {
-            _errors.Add(new CommandError((int)errorCode, errorCode.ToString()));
+            return new CommandResult(true);
         }
 
-        public CommandResult(IEnumerable<CommandErrorCode> errorCodes)
+        public static CommandResult Failed()
         {
-            _errors.AddRange(errorCodes.Select(e => new CommandError((int)e, e.ToString())));
+            return new CommandResult(false);
+        }
+
+        public static CommandResult Failed(params CommandErrorCode[] errorCodes)
+        {
+            var res = Failed();
+            res._errors.AddRange(errorCodes.Select(e => new CommandError((int)e, e.ToString())));
+            return res;
+        }
+
+        public static CommandResult Failed(IEnumerable<object> errors)
+        {
+            var res = Failed();
+            res._errors.AddRange(errors);
+            return res;
         }
     }
 }

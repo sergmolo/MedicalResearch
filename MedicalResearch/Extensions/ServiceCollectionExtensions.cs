@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using MedicalResearch.Business.Services;
@@ -81,6 +82,7 @@ namespace MedicalResearch.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireDigit = true;
                 options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             });
 
             services.AddAuthenticationSchemes();

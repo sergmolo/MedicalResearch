@@ -1,40 +1,40 @@
 ﻿using MediatR;
 using MedicalResearch.Business.Commands.Users;
 using MedicalResearch.Business.Enums;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 using MedicalResearch.Business.Models;
 using MedicalResearch.Data.Entities;
-using MedicalResearch.Data.Enums;
+using Microsoft.AspNetCore.Identity;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MedicalResearch.Business.Handlers.Users
 {
-    public class RemoveUserHandler : IRequestHandler<RemoveUserCommand, CommandResult>
+    public class RemoveUserHandler : IRequestHandler<RemoveUserByIdCommand, CommandResult>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
+        private readonly IMediator _mediator;
 
-        public RemoveUserHandler(IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+        public RemoveUserHandler(UserManager<User> userManager, IMediator mediator)
         {
-            _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
+            _mediator = mediator;
         }
 
-        public async Task<CommandResult> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(RemoveUserByIdCommand request, CancellationToken ct)
         {
-            var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userId);
-            var isAdmin = _httpContextAccessor.HttpContext?.User?.IsInRole(Role.Administrator.ToString());
-            
-            if (!isAdmin.HasValue || isAdmin.Value) return new CommandResult(CommandErrorCode.YouAreAdmin);
-            
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+
+            if (user is null)
+            {
+                return CommandResult.Failed(CommandErrorCode.UserNotFound);
+            }
+
             user.IsRemoved = true;
             await _userManager.UpdateAsync(user);
 
-            return new CommandResult();
+            await _mediator.Send(new LogoutUserCommand(), ct);
+
+            return CommandResult.Success();
         }
     }
 }

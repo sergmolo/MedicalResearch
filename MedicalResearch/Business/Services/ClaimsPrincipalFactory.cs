@@ -17,13 +17,13 @@ namespace MedicalResearch.Business.Services
         {
             var principal = await base.CreateAsync(user);
             
-            if (principal?.Identity is not null)
+            if (principal.Identity is not null)
             {
                 var role = user.Role.ToString();
                 ((ClaimsIdentity)principal.Identity).AddClaim(new Claim(ClaimTypes.Role, role));
             }
 
-            return principal!;
+            return principal;
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using MedicalResearch.Business.Enums;
+using MedicalResearch.Business.Models;
 using MedicalResearch.Business.Queries.Users;
+using MedicalResearch.Data;
 using MedicalResearch.V1.Responses;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
-using MedicalResearch.Data;
-using MedicalResearch.Data.Entities;
 
 namespace MedicalResearch.Business.Handlers.Users
 {
@@ -24,8 +25,8 @@ namespace MedicalResearch.Business.Handlers.Users
         public async Task<UserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users.AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
-            
+                .SingleOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+
             return _mapper.Map<UserResponse>(user);
         }
     }
