@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using MedicalResearch.Data.Entities;
+using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using System;
-using MedicalResearch.Data.Entities;
-using MedicalResearch.Data.Enums;
 
 namespace MedicalResearch.MapperProfiles
 {
@@ -19,6 +19,10 @@ namespace MedicalResearch.MapperProfiles
                 .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow))
                 .ForMember(m => m.PasswordCreatedAt, o => o.MapFrom(s => DateTime.UtcNow))
                 .ForMember(m => m.Role, o => o.MapFrom(s => Role.Researcher));
+
+            CreateMap<ClinicRequest, Clinic>()
+                .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow));
+            CreateMap<Clinic, ClinicResponse>();
         }
     }
 }

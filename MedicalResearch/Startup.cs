@@ -1,5 +1,10 @@
-using FluentValidation.AspNetCore;
+using FluentValidation;
 using MediatR;
+using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Services;
+using MedicalResearch.Data;
+using MedicalResearch.Extensions;
+using MedicalResearch.V1.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -8,9 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
-using MedicalResearch.Data;
-using MedicalResearch.Extensions;
-using MedicalResearch.Business.Models;
 
 namespace MedicalResearch
 {
@@ -38,8 +40,10 @@ namespace MedicalResearch
 
             services.AddIdentity();
 
-            services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddControllers();
+            
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
             services.AddJsonStringEnumConverter();
 
@@ -62,6 +66,7 @@ namespace MedicalResearch
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
                 app.UseSwagger();
 
                 app.UseSwaggerUI(opt =>
@@ -74,6 +79,8 @@ namespace MedicalResearch
                     }
                 });
             }
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

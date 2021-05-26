@@ -7,6 +7,8 @@ namespace MedicalResearch.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
+        public DbSet<Clinic> Clinics { get; set; } = default!;
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
