@@ -8,6 +8,12 @@ namespace MedicalResearch.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<int>(
+                name: "ClinicId",
+                table: "Users",
+                type: "integer",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Clinics",
                 columns: table => new
@@ -26,12 +32,37 @@ namespace MedicalResearch.Data.Migrations
                 {
                     table.PrimaryKey("PK_Clinics", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ClinicId",
+                table: "Users",
+                column: "ClinicId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Users_Clinics_ClinicId",
+                table: "Users",
+                column: "ClinicId",
+                principalTable: "Clinics",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Users_Clinics_ClinicId",
+                table: "Users");
+
             migrationBuilder.DropTable(
                 name: "Clinics");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Users_ClinicId",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "ClinicId",
+                table: "Users");
         }
     }
 }

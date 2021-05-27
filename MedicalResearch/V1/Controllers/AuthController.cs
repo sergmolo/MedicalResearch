@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalResearch.Business.Commands.Users;
+using MedicalResearch.Business.Commands.Auth;
 using MedicalResearch.Business.Models;
 using MedicalResearch.V1.Requests;
 using Microsoft.AspNetCore.Authorization;

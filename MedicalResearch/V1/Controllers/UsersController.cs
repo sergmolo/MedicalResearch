@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MedicalResearch.Attributes;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Business.Models;
 using MedicalResearch.Business.Queries.Users;
 using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
@@ -38,7 +37,7 @@ namespace MedicalResearch.V1.Controllers
         {
             var result = await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
 
-            return result.Succeeded ? new StatusCodeResult(201) : BadRequest(result.Errors);
+            return result.Succeeded ? new StatusCodeResult(StatusCodes.Status201Created) : BadRequest(result.Errors);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -50,29 +49,34 @@ namespace MedicalResearch.V1.Controllers
 
         [Authorized(Role.Administrator, Role.Sponsor)]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponse>> GetById(int id, CancellationToken ct)
+        public async Task<UserResponse> GetById(int id, CancellationToken ct)
         {
-            var res = await _mediator.Send(new GetUserByIdQuery(id), ct);
-            return res != null ? Ok(res) : BadRequest();
+            return await _mediator.Send(new GetUserByIdQuery(id), ct);
         }
 
         [HttpGet]
         public async Task<ActionResult<UserResponse>> Get(CancellationToken ct)
         {
-            var res = await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
-            return res != null ? Ok(res) : BadRequest();
+            return await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
         }
 
         [HttpPut]
         public async Task Put([FromBody] EditUserRequest editUserRequest, CancellationToken ct)
         {
-            await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
+            await _mediator.Send(new EditUserByIdCommand(GetCurrentUserId(), editUserRequest), ct);
+        }
+
+        [Authorized(Role.Administrator, Role.Sponsor)]
+        [HttpPut("{id}/EditRole")]
+        public async Task EditUserRole(int id, [FromBody] EditUserRoleRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new EditUserRoleCommand(id, request), ct);
         }
 
         [HttpDelete]
-        public async Task<CommandResult> Remove(CancellationToken ct)
+        public async Task Remove(CancellationToken ct)
         {
-            return await _mediator.Send(new RemoveUserByIdCommand(GetCurrentUserId()), ct);
+            await _mediator.Send(new RemoveUserByIdCommand(GetCurrentUserId()), ct);
         }
 
         private int GetCurrentUserId()

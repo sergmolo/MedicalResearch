@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MedicalResearch.Business.Commands.Users;
+using MedicalResearch.Business.Commands.Auth;
 using MedicalResearch.Business.Enums;
 using MedicalResearch.Business.Models;
 using MedicalResearch.Data.Entities;
@@ -9,7 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MedicalResearch.Business.Handlers.Users
+namespace MedicalResearch.Business.Handlers.Auth
 {
     public class LoginUserHandler : IRequestHandler<LoginUserCommand, CommandResult>
     {
@@ -31,7 +31,8 @@ namespace MedicalResearch.Business.Handlers.Users
             {
                 return CommandResult.Failed(CommandErrorCode.UserNotFound);
             }
-            if (user.IsRemoved) {
+            if (user.IsRemoved)
+            {
                 return CommandResult.Failed(CommandErrorCode.UserRemoved);
             }
             if (await _userManager.IsLockedOutAsync(user))

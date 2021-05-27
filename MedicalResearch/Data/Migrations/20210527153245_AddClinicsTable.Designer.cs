@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedicalResearch.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210526141949_AddClinicsTable")]
+    [Migration("20210527153245_AddClinicsTable")]
     partial class AddClinicsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,9 @@ namespace MedicalResearch.Data.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ClinicId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -144,6 +147,8 @@ namespace MedicalResearch.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClinicId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -152,6 +157,15 @@ namespace MedicalResearch.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MedicalResearch.Data.Entities.User", b =>
+                {
+                    b.HasOne("MedicalResearch.Data.Entities.Clinic", "Clinic")
+                        .WithMany()
+                        .HasForeignKey("ClinicId");
+
+                    b.Navigation("Clinic");
                 });
 #pragma warning restore 612, 618
         }

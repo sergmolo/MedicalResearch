@@ -45,5 +45,11 @@ namespace MedicalResearch.V1.Controllers
             await _mediator.Send(new AddClinicCommand(clinicRequest), ct);
             return new StatusCodeResult(StatusCodes.Status201Created);
         }
+
+        [HttpPost("{id}/AttachUser")]
+        public async Task AttachUser(int id, [FromBody] AttachUserRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new AttachUserCommand(id, request), ct);
+        }
     }
 }

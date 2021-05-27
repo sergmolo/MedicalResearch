@@ -67,6 +67,9 @@ namespace MedicalResearch.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("ClinicId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -142,6 +145,8 @@ namespace MedicalResearch.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClinicId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -150,6 +155,15 @@ namespace MedicalResearch.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MedicalResearch.Data.Entities.User", b =>
+                {
+                    b.HasOne("MedicalResearch.Data.Entities.Clinic", "Clinic")
+                        .WithMany()
+                        .HasForeignKey("ClinicId");
+
+                    b.Navigation("Clinic");
                 });
 #pragma warning restore 612, 618
         }

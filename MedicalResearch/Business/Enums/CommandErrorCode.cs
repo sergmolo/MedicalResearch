@@ -2,7 +2,6 @@
 {
     public enum CommandErrorCode
     {
-        DbError = 1,
         UserNotFound = 2,
         UserRemoved = 3,
         UserIsLockedOut = 4,

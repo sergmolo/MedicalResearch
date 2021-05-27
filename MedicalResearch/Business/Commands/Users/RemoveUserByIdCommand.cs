@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using MedicalResearch.Business.Models;
 
 namespace MedicalResearch.Business.Commands.Users
 {
-    public class RemoveUserByIdCommand : IRequest<CommandResult>
+    public class RemoveUserByIdCommand : IRequest<Unit>
     {
         public int UserId { get; }
 

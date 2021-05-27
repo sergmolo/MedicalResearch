@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MedicalResearch.Business.Handlers.Users
 {
-    public class EditUserHandler : IRequestHandler<EditUserCommand, CommandResult>
+    public class EditUserHandler : IRequestHandler<EditUserByIdCommand, CommandResult>
     {
         private readonly UserManager<User> _userManager;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -25,14 +25,9 @@ namespace MedicalResearch.Business.Handlers.Users
             _passwordValidator = passwordValidator;
         }
 
-        public async Task<CommandResult> Handle(EditUserCommand request, CancellationToken cancellationToken)
+        public async Task<CommandResult> Handle(EditUserByIdCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-            
-            if (user is null)
-            {
-                return CommandResult.Failed(CommandErrorCode.UserNotFound);
-            }
             
             user.FirstName = request.Model.FirstName;
             user.LastName = request.Model.LastName;

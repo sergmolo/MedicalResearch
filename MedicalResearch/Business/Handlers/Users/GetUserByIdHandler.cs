@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using MedicalResearch.Business.Enums;
 using MedicalResearch.Business.Models;
 using MedicalResearch.Business.Queries.Users;
 using MedicalResearch.Data;
 using MedicalResearch.V1.Responses;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +26,8 @@ namespace MedicalResearch.Business.Handlers.Users
         {
             var user = await _dbContext.Users.AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+
+            if (user is null) throw new ErrorException(Enums.CommandErrorCode.UserNotFound);
 
             return _mapper.Map<UserResponse>(user);
         }
