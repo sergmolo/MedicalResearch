@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using MedicalResearch.Business.Enums;
-using MedicalResearch.Business.Models;
 using MedicalResearch.Business.Queries.Users;
 using MedicalResearch.Data;
 using MedicalResearch.V1.Responses;
@@ -24,8 +22,7 @@ namespace MedicalResearch.Business.Handlers.Users
 
         public async Task<UserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.AsNoTracking()
-                .SingleOrDefaultAsync(u => u.Id == request.Id, cancellationToken);
+            var user = await _dbContext.Users.AsNoTracking().SingleAsync(u => u.Id == request.Id, cancellationToken);
 
             return _mapper.Map<UserResponse>(user);
         }

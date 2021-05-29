@@ -1,10 +1,9 @@
 ﻿using MediatR;
-using MedicalResearch.Business.Models;
 using MedicalResearch.V1.Requests;
 
-namespace MedicalResearch.Business.Commands.Users
+namespace MedicalResearch.Business.Commands.Auth
 {
-    public class LoginUserCommand : IRequest<CommandResult>
+    public class LoginUserCommand : IRequest<Unit>
     {
         public LoginRequest Model { get; }
 

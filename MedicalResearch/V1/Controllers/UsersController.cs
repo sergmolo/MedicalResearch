@@ -1,14 +1,12 @@
 ﻿using MediatR;
 using MedicalResearch.Attributes;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Business.Models;
 using MedicalResearch.Business.Queries.Users;
 using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -32,13 +30,9 @@ namespace MedicalResearch.V1.Controllers
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(IEnumerable<IdentityError>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
+        public async Task Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
         {
-            var result = await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
-
-            return result.Succeeded ? new StatusCodeResult(201) : BadRequest(result.Errors);
+            await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -50,17 +44,15 @@ namespace MedicalResearch.V1.Controllers
 
         [Authorized(Role.Administrator, Role.Sponsor)]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponse>> GetById(int id, CancellationToken ct)
+        public async Task<UserResponse> GetById(int id, CancellationToken ct)
         {
-            var res = await _mediator.Send(new GetUserByIdQuery(id), ct);
-            return res != null ? Ok(res) : BadRequest();
+            return await _mediator.Send(new GetUserByIdQuery(id), ct);
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserResponse>> Get(CancellationToken ct)
+        public async Task<UserResponse> Get(CancellationToken ct)
         {
-            var res = await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
-            return res != null ? Ok(res) : BadRequest();
+            return await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
         }
 
         [HttpPut]
@@ -69,10 +61,23 @@ namespace MedicalResearch.V1.Controllers
             await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
         }
 
-        [HttpDelete]
-        public async Task<CommandResult> Remove(CancellationToken ct)
+        [Authorized(Role.Administrator, Role.Sponsor)]
+        [HttpPut("{id}/EditRole")]
+        public async Task EditUserRole(int id, [FromBody] EditUserRoleRequest request, CancellationToken ct)
         {
-            return await _mediator.Send(new RemoveUserByIdCommand(GetCurrentUserId()), ct);
+            await _mediator.Send(new EditUserRoleCommand(id, request), ct);
+        }
+
+        [HttpDelete]
+        public async Task Remove(CancellationToken ct)
+        {
+            await _mediator.Send(new RemoveUserCommand(GetCurrentUserId()), ct);
+        }
+
+        [HttpPost("{id}/LinkToClinic")]
+        public async Task LinkToClinic(int id, [FromBody] LinkUserToClinicRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
         }
 
         private int GetCurrentUserId()

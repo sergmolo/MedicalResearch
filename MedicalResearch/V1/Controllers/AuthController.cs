@@ -1,9 +1,7 @@
 ﻿using MediatR;
-using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Commands.Auth;
 using MedicalResearch.V1.Requests;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,21 +21,16 @@ namespace MedicalResearch.V1.Controllers
         }
 
         [HttpPost("Login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommandResult), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CommandResult>> Login([FromBody] LoginRequest loginRequest, CancellationToken ct)
+        public async Task Login([FromBody] LoginRequest loginRequest, CancellationToken ct)
         {
-            var result = await _mediator.Send(new LoginUserCommand(loginRequest), ct);
-            return result.Succeeded ? Ok() : BadRequest(result);
+            await _mediator.Send(new LoginUserCommand(loginRequest), ct);
         }
 
         [Authorize]
         [HttpPost("Logout")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Logout(CancellationToken ct)
+        public async Task Logout(CancellationToken ct)
         {
             await _mediator.Send(new LogoutUserCommand(), ct);
-            return Ok();
         }
     }
 }
