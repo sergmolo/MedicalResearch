@@ -1,6 +1,4 @@
-﻿using MedicalResearch.Business.Enums;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace MedicalResearch.Business.Models
 {
@@ -25,13 +23,6 @@ namespace MedicalResearch.Business.Models
         public static CommandResult Failed()
         {
             return new CommandResult(false);
-        }
-
-        public static CommandResult Failed(params CommandErrorCode[] errorCodes)
-        {
-            var res = Failed();
-            res._errors.AddRange(errorCodes.Select(e => new CommandError((int)e, e.ToString())));
-            return res;
         }
 
         public static CommandResult Failed(IEnumerable<object> errors)

@@ -8,11 +8,23 @@ namespace MedicalResearch.Business.Validators
     {
         public RegisterUserValidator()
         {
-            RuleFor(x => x.Model.FirstName).NotEmpty().Must(s => !s.Any(char.IsDigit));
-            RuleFor(x => x.Model.LastName).NotEmpty().Must(s => !s.Any(char.IsDigit));
-            RuleFor(x => x.Model.Initials).NotEmpty().Must(s => s.All(char.IsLetter));
-            RuleFor(x => x.Model.Email).EmailAddress();
-            RuleFor(x => x.Model.Password).MinimumLength(8);
+            RuleFor(x => x.Model.FirstName)
+                .NotEmpty()
+                .Must(s => !s.Any(char.IsDigit));
+
+            RuleFor(x => x.Model.LastName)
+                .NotEmpty()
+                .Must(s => !s.Any(char.IsDigit));
+
+            RuleFor(x => x.Model.Initials)
+                .NotEmpty()
+                .Must(s => s.All(char.IsLetter));
+
+            RuleFor(x => x.Model.Email)
+                .EmailAddress();
+
+            RuleFor(x => x.Model.Password)
+                .MinimumLength(8);
         }
     }
 }

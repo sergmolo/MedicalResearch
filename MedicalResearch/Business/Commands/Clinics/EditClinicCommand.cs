@@ -6,9 +6,9 @@ namespace MedicalResearch.Business.Commands.Clinics
     public class EditClinicCommand : IRequest<Unit>
     {
         public int Id { get; }
-        public ClinicRequest Model { get; }
+        public EditClinicRequest Model { get; }
 
-        public EditClinicCommand(int id, ClinicRequest model)
+        public EditClinicCommand(int id, EditClinicRequest model)
         {
             Id = id;
             Model = model;

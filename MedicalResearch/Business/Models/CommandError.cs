@@ -2,10 +2,10 @@
 {
     public class CommandError
     {
-        public int Code { get; init; }
+        public string Code { get; init; }
         public string Description { get; init; } = default!;
 
-        public CommandError(int code, string description)
+        public CommandError(string code, string description)
         {
             Code = code;
             Description = description;

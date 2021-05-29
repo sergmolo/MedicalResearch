@@ -27,7 +27,7 @@ namespace MedicalResearch.Business.Handlers.Clinics
         {
             var query = _dbContext.Clinics.AsNoTracking().AsQueryable();
 
-            query = query.OrderByPropertyName(request.SortCol, request.Asc);
+            query = query.OrderBy(request.SortCol, request.Asc);
 
             var skip = (request.PageIndex - 1) * request.PageSize;
             query = query.Skip(skip).Take(request.PageSize);

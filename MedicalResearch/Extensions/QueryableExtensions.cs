@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 
 namespace MedicalResearch.Extensions
 {
-    public static class ApplySortExtension
+    public static class QueryableExtensions
     {
-        public static IQueryable<T> OrderByPropertyName<T>(this IQueryable<T> q, string sortField, bool asc)
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> q, string sortField, bool asc)
         {
             var param = Expression.Parameter(typeof(T), "p");
             var prop = Expression.Property(param, sortField);

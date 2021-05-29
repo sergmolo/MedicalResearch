@@ -7,7 +7,6 @@ using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -31,13 +30,9 @@ namespace MedicalResearch.V1.Controllers
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(IEnumerable<IdentityError>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
+        public async Task Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
         {
-            var result = await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
-
-            return result.Succeeded ? new StatusCodeResult(StatusCodes.Status201Created) : BadRequest(result.Errors);
+            await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -63,7 +58,7 @@ namespace MedicalResearch.V1.Controllers
         [HttpPut]
         public async Task Put([FromBody] EditUserRequest editUserRequest, CancellationToken ct)
         {
-            await _mediator.Send(new EditUserByIdCommand(GetCurrentUserId(), editUserRequest), ct);
+            await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -76,7 +71,13 @@ namespace MedicalResearch.V1.Controllers
         [HttpDelete]
         public async Task Remove(CancellationToken ct)
         {
-            await _mediator.Send(new RemoveUserByIdCommand(GetCurrentUserId()), ct);
+            await _mediator.Send(new RemoveUserCommand(GetCurrentUserId()), ct);
+        }
+
+        [HttpPost("{id}/LinkToClinic")]
+        public async Task LinkToClinic(int id, [FromBody] LinkUserToClinicRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
         }
 
         private int GetCurrentUserId()

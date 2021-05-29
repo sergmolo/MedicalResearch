@@ -20,7 +20,7 @@ namespace MedicalResearch.MapperProfiles
                 .ForMember(m => m.PasswordCreatedAt, o => o.MapFrom(s => DateTime.UtcNow))
                 .ForMember(m => m.Role, o => o.MapFrom(s => Role.Researcher));
 
-            CreateMap<ClinicRequest, Clinic>()
+            CreateMap<AddClinicRequest, Clinic>()
                 .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow));
             CreateMap<Clinic, ClinicResponse>();
         }

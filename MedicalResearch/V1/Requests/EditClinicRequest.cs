@@ -1,6 +1,6 @@
 ﻿namespace MedicalResearch.V1.Requests
 {
-    public class ClinicRequest
+    public class EditClinicRequest
     {
         public string Name { get; set; } = default!;
         public string City { get; set; } = default!;

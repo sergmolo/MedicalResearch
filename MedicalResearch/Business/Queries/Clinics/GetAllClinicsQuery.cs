@@ -10,6 +10,7 @@ namespace MedicalResearch.Business.Queries.Clinics
         public int PageSize { get; }
         public string SortCol { get; }
         public bool Asc { get; }
+
         public GetAllClinicsQuery(int pageIndex, int pageSize, string sortCol, bool asc)
         {
             PageIndex = pageIndex;

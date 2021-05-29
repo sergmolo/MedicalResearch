@@ -3,7 +3,6 @@ using MedicalResearch.Business.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MedicalResearch.V1.Middlewares
@@ -31,13 +30,21 @@ namespace MedicalResearch.V1.Middlewares
                 switch (exception)
                 {
                     case ValidationException e:
-                        response.StatusCode = StatusCodes.Status400BadRequest;
-                        responseModel = CommandResult.Failed(e.Errors.Select(e => e.ErrorMessage));
+                        response.StatusCode = e.Errors
+                            .Any(f => f.CustomState is NotFound) ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
+
+                        responseModel = CommandResult.Failed(
+                            e.Errors.Select(
+                                e => new CommandError(
+                                    e.PropertyName.Replace(".", "") + e.ErrorCode,
+                                    e.ErrorMessage)));
                         break;
-                    case ErrorException e:
-                        response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    case BusinessLogicException e:
+                        response.StatusCode = e.NotFound ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
                         responseModel = e.CommandResult;
                         break;
+
                     default:
                         response.StatusCode = StatusCodes.Status500InternalServerError;
                         responseModel = CommandResult.Failed(new string[] { exception.Message });

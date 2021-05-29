@@ -5,9 +5,9 @@ namespace MedicalResearch.Business.Commands.Clinics
 {
     public class AddClinicCommand : IRequest<Unit>
     {
-        public ClinicRequest Model { get; }
+        public AddClinicRequest Model { get; }
 
-        public AddClinicCommand(ClinicRequest model)
+        public AddClinicCommand(AddClinicRequest model)
         {
             Model = model;
         }
