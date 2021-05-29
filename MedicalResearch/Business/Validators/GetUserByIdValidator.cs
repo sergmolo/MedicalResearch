@@ -14,7 +14,7 @@ namespace MedicalResearch.Business.Validators
                 .NotEmpty()
                 .MustAsync(async (x, ct) => await dbContext.Users.AnyAsync(e => e.Id == x, ct))
                 .WithMessage("Wrong user ID")
-                .WithState(s => new NotFound());
+                .WithState(s => new NotFoundState());
         }
     }
 }

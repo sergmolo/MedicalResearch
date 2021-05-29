@@ -50,7 +50,7 @@ namespace MedicalResearch.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserResponse>> Get(CancellationToken ct)
+        public async Task<UserResponse> Get(CancellationToken ct)
         {
             return await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
         }

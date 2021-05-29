@@ -15,7 +15,7 @@ namespace MedicalResearch.Business.Validators
                 .NotEmpty()
                 .MustAsync(async (x, ct) => await dbContext.Clinics.AnyAsync(e => e.Id == x, ct))
                 .WithMessage("Wrong clinic ID")
-                .WithState(s => new NotFound());
+                .WithState(s => new NotFoundState());
 
             RuleFor(x => x.Model.Name)
                 .NotEmpty()

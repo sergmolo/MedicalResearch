@@ -31,7 +31,7 @@ namespace MedicalResearch.V1.Middlewares
                 {
                     case ValidationException e:
                         response.StatusCode = e.Errors
-                            .Any(f => f.CustomState is NotFound) ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
+                            .Any(f => f.CustomState is NotFoundState) ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
 
                         responseModel = CommandResult.Failed(
                             e.Errors.Select(
