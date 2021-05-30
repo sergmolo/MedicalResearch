@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MedicalResearch.Business.Commands.Clinics;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Pipeline;
 using MedicalResearch.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace MedicalResearch.Business.Models
+﻿namespace MedicalResearch.Business.Pipeline
 {
     public struct NotFoundState
     {

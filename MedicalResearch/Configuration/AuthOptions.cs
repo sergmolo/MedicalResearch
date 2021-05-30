@@ -1,4 +1,4 @@
-﻿namespace MedicalResearch.Business.Models
+﻿namespace MedicalResearch.Configuration
 {
     public class AuthOptions
     {

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Pipeline;
 using MedicalResearch.Business.Queries.Users;
 using MedicalResearch.Data;
 using Microsoft.EntityFrameworkCore;
