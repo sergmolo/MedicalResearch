@@ -15,10 +15,10 @@ using System.Threading.Tasks;
 
 namespace MedicalResearch.V1.Controllers
 {
-    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -28,18 +28,10 @@ namespace MedicalResearch.V1.Controllers
             _mediator = mediator;
         }
 
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
+        [HttpGet]
+        public async Task<UserResponse> Get(CancellationToken ct)
         {
-            await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
-        }
-
-        [Authorized(Role.Administrator, Role.Sponsor)]
-        [HttpGet("All")]
-        public async Task<IEnumerable<UserResponse>> GetAll(CancellationToken ct)
-        {
-            return await _mediator.Send(new GetAllUsersQuery(), ct);
+            return await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -49,16 +41,24 @@ namespace MedicalResearch.V1.Controllers
             return await _mediator.Send(new GetUserByIdQuery(id), ct);
         }
 
-        [HttpGet]
-        public async Task<UserResponse> Get(CancellationToken ct)
+        [Authorized(Role.Administrator, Role.Sponsor)]
+        [HttpGet("All")]
+        public async Task<IEnumerable<UserResponse>> GetAll(CancellationToken ct)
         {
-            return await _mediator.Send(new GetUserByIdQuery(GetCurrentUserId()), ct);
+            return await _mediator.Send(new GetAllUsersQuery(), ct);
         }
 
-        [HttpPut]
-        public async Task Put([FromBody] EditUserRequest editUserRequest, CancellationToken ct)
+        [AllowAnonymous]
+        [HttpPost("Register")]
+        public async Task Register([FromBody] RegisterRequest registerRequest, CancellationToken ct)
         {
-            await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
+            await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
+        }
+
+        [HttpPost("{id}/LinkToClinic")]
+        public async Task LinkToClinic(int id, [FromBody] LinkUserToClinicRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
         }
 
         [Authorized(Role.Administrator, Role.Sponsor)]
@@ -68,16 +68,16 @@ namespace MedicalResearch.V1.Controllers
             await _mediator.Send(new EditUserRoleCommand(id, request), ct);
         }
 
+        [HttpPut]
+        public async Task Put([FromBody] EditUserRequest editUserRequest, CancellationToken ct)
+        {
+            await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
+        }
+
         [HttpDelete]
         public async Task Remove(CancellationToken ct)
         {
             await _mediator.Send(new RemoveUserCommand(GetCurrentUserId()), ct);
-        }
-
-        [HttpPost("{id}/LinkToClinic")]
-        public async Task LinkToClinic(int id, [FromBody] LinkUserToClinicRequest request, CancellationToken ct)
-        {
-            await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
         }
 
         private int GetCurrentUserId()

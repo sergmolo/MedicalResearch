@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace MedicalResearch.V1.Controllers
 {
-    [Authorized(Role.Sponsor, Role.Administrator)]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorized(Role.Sponsor, Role.Administrator)]
     public class ClinicsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -27,22 +27,22 @@ namespace MedicalResearch.V1.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ClinicResponse>> GetClinics(CancellationToken ct,
+        public async Task<IEnumerable<ClinicResponse>> GetAll(CancellationToken ct,
             int pageIndex = 1, int pageSize = 10, string? sortCol = null, bool asc = true)
         {
             return await _mediator.Send(new GetAllClinicsQuery(pageIndex, pageSize, sortCol ?? nameof(Clinic.Id), asc), ct);
         }
 
-        [HttpPut("{id}")]
-        public async Task PutClinic(int id, EditClinicRequest clinic, CancellationToken ct)
-        {
-            await _mediator.Send(new EditClinicCommand(id, clinic), ct);
-        }
-
         [HttpPost]
-        public async Task PostClinic(AddClinicRequest clinicRequest, CancellationToken ct)
+        public async Task Post(AddClinicRequest clinicRequest, CancellationToken ct)
         {
             await _mediator.Send(new AddClinicCommand(clinicRequest), ct);
+        }
+
+        [HttpPut("{id}")]
+        public async Task Put(int id, EditClinicRequest clinic, CancellationToken ct)
+        {
+            await _mediator.Send(new EditClinicCommand(id, clinic), ct);
         }
     }
 }

@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace MedicalResearch.V1.Controllers
 {
-    [Authorized(Role.Administrator, Role.Manager)]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorized(Role.Administrator, Role.Manager)]
     public class MedicinesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -34,10 +34,28 @@ namespace MedicalResearch.V1.Controllers
 
         [Authorized(Role.Administrator, Role.Manager, Role.Sponsor)]
         [HttpGet]
-        public async Task<IEnumerable<MedicineResponse>> Get(CancellationToken ct,
+        public async Task<IEnumerable<MedicineResponse>> GetAll(CancellationToken ct,
             int pageIndex = 1, int pageSize = 10, string? sortCol = null, bool asc = true)
         {
             return await _mediator.Send(new GetAllMedicinesQuery(pageIndex, pageSize, sortCol ?? nameof(Medicine.Id), asc), ct);
+        }
+
+        [HttpGet("GetAllMedicineTypes")]
+        public async Task<IEnumerable<MedicineTypeResponse>> GetAllMedicineTypes(CancellationToken ct)
+        {
+            return await _mediator.Send(new GetAllMedicineTypesQuery(), ct);
+        }
+
+        [HttpGet("GetAllContainers")]
+        public async Task<IEnumerable<ContainerResponse>> GetAllContainers(CancellationToken ct)
+        {
+            return await _mediator.Send(new GetAllContainersQuery(), ct);
+        }
+
+        [HttpGet("GetAllDosageForms")]
+        public async Task<IEnumerable<DosageFormResponse>> GetAllDosageForms(CancellationToken ct)
+        {
+            return await _mediator.Send(new GetAllDosageFormsQuery(), ct);
         }
 
         [HttpPut("{id}")]

@@ -19,17 +19,13 @@ namespace MedicalResearch.Business.Handlers.Medicines
 
         public async Task<Unit> Handle(EditMedicineCommand request, CancellationToken ct)
         {
-            var medType = await _dbContext.MedicineTypes.SingleAsync(t => t.Name == request.Model.MedicineType, ct);
-            var container = await _dbContext.Containers.SingleAsync(t => t.Name == request.Model.Container, ct);
-            var dosageForm = await _dbContext.DosageForms.SingleAsync(t => t.Name == request.Model.DosageForm, ct);
-            
-            var med = await _dbContext.Medicines.FindAsync(request.Id, ct);
+            var med = await _dbContext.Medicines.FindAsync(new object[] { request.Id }, ct);
 
             med.Name = request.Model.Name;
             med.Description = request.Model.Description;
-            med.MedicineType = medType;
-            med.Container = container;
-            med.DosageForm = dosageForm;
+            med.MedicineTypeId = request.Model.MedicineTypeId;
+            med.ContainerId = request.Model.ContainerId;
+            med.DosageFormId = request.Model.DosageFormId;
             med.UpdatedAt = DateTime.UtcNow;
 
             await _dbContext.SaveChangesAsync(ct);

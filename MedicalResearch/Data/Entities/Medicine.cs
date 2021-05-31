@@ -13,7 +13,7 @@ namespace MedicalResearch.Data.Entities
         public DosageForm DosageForm { get; set; } = default!;
         public int ContainerId { get; set; }
         public Container Container { get; set; } = default!;
-        public DateTime? UpdatedAt { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

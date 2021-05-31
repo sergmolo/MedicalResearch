@@ -12,8 +12,7 @@ namespace MedicalResearch.Business.Validators
         {
             RuleFor(m => m.Id)
                 .NotEmpty()
-                .MustAsync(async (id, ct) =>
-                            await dbContext.Medicines.AsNoTracking().AnyAsync(p => p.Id == id, ct))
+                .MustAsync(async (id, ct) => await dbContext.Medicines.AsNoTracking().AnyAsync(p => p.Id == id, ct))
                 .WithMessage("Wrong medicine ID")
                 .WithState(s => new NotFoundState());
 
@@ -25,20 +24,17 @@ namespace MedicalResearch.Business.Validators
                 .NotEmpty()
                 .MinimumLength(3);
 
-            RuleFor(m => m.Model.MedicineType)
+            RuleFor(m => m.Model.MedicineTypeId)
                 .NotEmpty()
-                .MustAsync(async (name, ct) =>
-                            await dbContext.MedicineTypes.AsNoTracking().AnyAsync(p => p.Name == name, ct));
+                .MustAsync(async (id, ct) => await dbContext.MedicineTypes.AsNoTracking().AnyAsync(p => p.Id == id, ct));
 
-            RuleFor(m => m.Model.Container)
+            RuleFor(m => m.Model.ContainerId)
                 .NotEmpty()
-                .MustAsync(async (name, ct) =>
-                            await dbContext.Containers.AsNoTracking().AnyAsync(p => p.Name == name, ct));
+                .MustAsync(async (id, ct) => await dbContext.Containers.AsNoTracking().AnyAsync(p => p.Id == id, ct));
 
-            RuleFor(m => m.Model.DosageForm)
+            RuleFor(m => m.Model.DosageFormId)
                 .NotEmpty()
-                .MustAsync(async (name, ct) =>
-                            await dbContext.DosageForms.AsNoTracking().AnyAsync(p => p.Name == name, ct));
+                .MustAsync(async (id, ct) => await dbContext.DosageForms.AsNoTracking().AnyAsync(p => p.Id == id, ct));
         }
     }
 }

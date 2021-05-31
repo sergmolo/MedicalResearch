@@ -24,11 +24,16 @@ namespace MedicalResearch.MapperProfiles
                 .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow));
             CreateMap<Clinic, ClinicResponse>();
 
-            CreateMap<AddMedicineRequest, Medicine>();
+            CreateMap<AddMedicineRequest, Medicine>()
+                .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow));
             CreateMap<Medicine, MedicineResponse>()
                 .ForMember(m => m.MedicineType, o => o.MapFrom(s => s.MedicineType.Name))
                 .ForMember(m => m.DosageForm, o => o.MapFrom(s => s.DosageForm.Name))
                 .ForMember(m => m.Container, o => o.MapFrom(s => s.Container.Name));
+
+            CreateMap<MedicineType, MedicineTypeResponse>();
+            CreateMap<Container, ContainerResponse>();
+            CreateMap<DosageForm, DosageFormResponse>();
         }
     }
 }

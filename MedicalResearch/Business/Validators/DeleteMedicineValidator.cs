@@ -12,8 +12,7 @@ namespace MedicalResearch.Business.Validators
         {
             RuleFor(m => m.Id)
                 .NotEmpty()
-                .MustAsync(async (id, ct) =>
-                            await dbContext.Medicines.AsNoTracking().AnyAsync(p => p.Id == id, ct))
+                .MustAsync(async (id, ct) => await dbContext.Medicines.AsNoTracking().AnyAsync(p => p.Id == id, ct))
                 .WithMessage("Wrong medicine ID")
                 .WithState(s => new NotFoundState());
         }

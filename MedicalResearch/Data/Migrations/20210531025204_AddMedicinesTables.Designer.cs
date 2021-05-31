@@ -10,13 +10,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedicalResearch.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210530020354_AddMedicinesTables")]
+    [Migration("20210531025204_AddMedicinesTables")]
     partial class AddMedicinesTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasPostgresExtension("citext")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -68,9 +69,12 @@ namespace MedicalResearch.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("citext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Containers");
                 });
@@ -84,9 +88,12 @@ namespace MedicalResearch.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("citext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("DosageForms");
                 });
@@ -141,9 +148,12 @@ namespace MedicalResearch.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("citext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("MedicineTypes");
                 });
@@ -253,19 +263,19 @@ namespace MedicalResearch.Data.Migrations
                     b.HasOne("MedicalResearch.Data.Entities.Container", "Container")
                         .WithMany()
                         .HasForeignKey("ContainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MedicalResearch.Data.Entities.DosageForm", "DosageForm")
                         .WithMany()
                         .HasForeignKey("DosageFormId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MedicalResearch.Data.Entities.MedicineType", "MedicineType")
                         .WithMany()
                         .HasForeignKey("MedicineTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Container");

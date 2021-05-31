@@ -21,6 +21,7 @@ namespace MedicalResearch.Data
         {
             base.OnModelCreating(builder);
 
+            builder.HasPostgresExtension("citext");
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
             builder.Ignore<IdentityRole<int>>();

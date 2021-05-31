@@ -8,13 +8,16 @@ namespace MedicalResearch.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:citext", ",,");
+
             migrationBuilder.CreateTable(
                 name: "Containers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "citext", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,7 +30,7 @@ namespace MedicalResearch.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "citext", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -40,7 +43,7 @@ namespace MedicalResearch.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "citext", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,8 +61,8 @@ namespace MedicalResearch.Data.Migrations
                     MedicineTypeId = table.Column<int>(type: "integer", nullable: false),
                     DosageFormId = table.Column<int>(type: "integer", nullable: false),
                     ContainerId = table.Column<int>(type: "integer", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,20 +72,32 @@ namespace MedicalResearch.Data.Migrations
                         column: x => x.ContainerId,
                         principalTable: "Containers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Medicines_DosageForms_DosageFormId",
                         column: x => x.DosageFormId,
                         principalTable: "DosageForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Medicines_MedicineTypes_MedicineTypeId",
                         column: x => x.MedicineTypeId,
                         principalTable: "MedicineTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Containers_Name",
+                table: "Containers",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DosageForms_Name",
+                table: "DosageForms",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medicines_ContainerId",
@@ -98,6 +113,12 @@ namespace MedicalResearch.Data.Migrations
                 name: "IX_Medicines_MedicineTypeId",
                 table: "Medicines",
                 column: "MedicineTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicineTypes_Name",
+                table: "MedicineTypes",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -113,6 +134,9 @@ namespace MedicalResearch.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "MedicineTypes");
+
+            migrationBuilder.AlterDatabase()
+                .OldAnnotation("Npgsql:PostgresExtension:citext", ",,");
         }
     }
 }
