@@ -26,12 +26,6 @@ namespace MedicalResearch.V1.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task Post([FromBody] AddMedicineRequest addMedicineRequest, CancellationToken ct)
-        {
-            await _mediator.Send(new AddMedicineCommand(addMedicineRequest), ct);
-        }
-
         [Authorized(Role.Administrator, Role.Manager, Role.Sponsor)]
         [HttpGet]
         public async Task<IEnumerable<MedicineResponse>> GetAll(CancellationToken ct,
@@ -56,6 +50,12 @@ namespace MedicalResearch.V1.Controllers
         public async Task<IEnumerable<DosageFormResponse>> GetAllDosageForms(CancellationToken ct)
         {
             return await _mediator.Send(new GetAllDosageFormsQuery(), ct);
+        }
+
+        [HttpPost]
+        public async Task Post([FromBody] AddMedicineRequest addMedicineRequest, CancellationToken ct)
+        {
+            await _mediator.Send(new AddMedicineCommand(addMedicineRequest), ct);
         }
 
         [HttpPut("{id}")]

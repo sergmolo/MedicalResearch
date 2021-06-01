@@ -55,7 +55,7 @@ namespace MedicalResearch.V1.Controllers
             await _mediator.Send(new RegisterUserCommand(registerRequest), ct);
         }
 
-        [HttpPost("{id}/LinkToClinic")]
+        [HttpPatch("{id}/LinkToClinic")]
         public async Task LinkToClinic(int id, [FromBody] LinkUserToClinicRequest request, CancellationToken ct)
         {
             await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
