@@ -11,6 +11,7 @@ namespace MedicalResearch.Business.Validators
         public DeleteMedicineValidator(ApplicationDbContext dbContext)
         {
             RuleFor(m => m.Id)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MustAsync(async (id, ct) => await dbContext.Medicines.AsNoTracking().AnyAsync(p => p.Id == id, ct))
                 .WithMessage("Wrong medicine ID")

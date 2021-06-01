@@ -1,8 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using MedicalResearch.Business.Commands.Medicines;
 using MedicalResearch.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,22 +10,19 @@ namespace MedicalResearch.Business.Handlers.Medicines
     public class EditMedicineHandler : IRequestHandler<EditMedicineCommand>
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public EditMedicineHandler(ApplicationDbContext dbContext)
+        public EditMedicineHandler(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(EditMedicineCommand request, CancellationToken ct)
         {
-            var med = await _dbContext.Medicines.FindAsync(new object[] { request.Id }, ct);
+            var medicine = await _dbContext.Medicines.FindAsync(new object[] { request.Id }, ct);
 
-            med.Name = request.Model.Name;
-            med.Description = request.Model.Description;
-            med.MedicineTypeId = request.Model.MedicineTypeId;
-            med.ContainerId = request.Model.ContainerId;
-            med.DosageFormId = request.Model.DosageFormId;
-            med.UpdatedAt = DateTime.UtcNow;
+            _mapper.Map(request.Model, medicine);
 
             await _dbContext.SaveChangesAsync(ct);
 

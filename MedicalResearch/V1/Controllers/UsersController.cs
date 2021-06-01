@@ -61,17 +61,17 @@ namespace MedicalResearch.V1.Controllers
             await _mediator.Send(new LinkUserToClinicCommand(id, request), ct);
         }
 
-        [Authorized(Role.Administrator, Role.Sponsor)]
-        [HttpPut("{id}/EditRole")]
-        public async Task EditUserRole(int id, [FromBody] EditUserRoleRequest request, CancellationToken ct)
-        {
-            await _mediator.Send(new EditUserRoleCommand(id, request), ct);
-        }
-
         [HttpPut]
         public async Task Put([FromBody] EditUserRequest editUserRequest, CancellationToken ct)
         {
             await _mediator.Send(new EditUserCommand(GetCurrentUserId(), editUserRequest), ct);
+        }
+
+        [Authorized(Role.Administrator, Role.Sponsor)]
+        [HttpPatch("{id}/EditRole")]
+        public async Task EditUserRole(int id, [FromBody] EditUserRoleRequest request, CancellationToken ct)
+        {
+            await _mediator.Send(new EditUserRoleCommand(id, request), ct);
         }
 
         [HttpDelete]

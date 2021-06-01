@@ -11,6 +11,7 @@ namespace MedicalResearch.Business.Validators
         public RemoveUserValidator(ApplicationDbContext dbContext)
         {
             RuleFor(m => m.UserId)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MustAsync(async (id, ct) => await dbContext.Users.AsNoTracking().AnyAsync(p => p.Id == id, ct))
                 .WithMessage("Wrong user ID")

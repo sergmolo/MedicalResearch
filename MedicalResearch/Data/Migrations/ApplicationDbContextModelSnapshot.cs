@@ -121,7 +121,7 @@ namespace MedicalResearch.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("citext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -133,6 +133,9 @@ namespace MedicalResearch.Data.Migrations
                     b.HasIndex("DosageFormId");
 
                     b.HasIndex("MedicineTypeId");
+
+                    b.HasIndex("Name", "MedicineTypeId", "ContainerId", "DosageFormId")
+                        .IsUnique();
 
                     b.ToTable("Medicines");
                 });

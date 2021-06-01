@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedicalResearch.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210531025204_AddMedicinesTables")]
+    [Migration("20210601000515_AddMedicinesTables")]
     partial class AddMedicinesTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,7 +123,7 @@ namespace MedicalResearch.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("citext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -135,6 +135,9 @@ namespace MedicalResearch.Data.Migrations
                     b.HasIndex("DosageFormId");
 
                     b.HasIndex("MedicineTypeId");
+
+                    b.HasIndex("Name", "MedicineTypeId", "ContainerId", "DosageFormId")
+                        .IsUnique();
 
                     b.ToTable("Medicines");
                 });

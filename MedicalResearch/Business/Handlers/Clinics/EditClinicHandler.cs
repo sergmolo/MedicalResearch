@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using MedicalResearch.Business.Commands.Clinics;
 using MedicalResearch.Data;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,23 +10,19 @@ namespace MedicalResearch.Business.Handlers.Clinics
     public class EditClinicHandler : IRequestHandler<EditClinicCommand>
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public EditClinicHandler(ApplicationDbContext dbContext)
+        public EditClinicHandler(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(EditClinicCommand request, CancellationToken ct)
         {
             var clinic = await _dbContext.Clinics.FindAsync(new object[] { request.Id }, ct);
 
-            clinic.Id = request.Id;
-            clinic.Name = request.Model.Name;
-            clinic.City = request.Model.City;
-            clinic.Phone = request.Model.Phone;
-            clinic.Address = request.Model.Address;
-            clinic.Address2 = request.Model.Address2;
-            clinic.UpdatedAt = DateTime.UtcNow;
+            _mapper.Map(request.Model, clinic);
 
             await _dbContext.SaveChangesAsync(ct);
 

@@ -56,7 +56,7 @@ namespace MedicalResearch.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "citext", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     MedicineTypeId = table.Column<int>(type: "integer", nullable: false),
                     DosageFormId = table.Column<int>(type: "integer", nullable: false),
@@ -113,6 +113,12 @@ namespace MedicalResearch.Data.Migrations
                 name: "IX_Medicines_MedicineTypeId",
                 table: "Medicines",
                 column: "MedicineTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medicines_Name_MedicineTypeId_ContainerId_DosageFormId",
+                table: "Medicines",
+                columns: new[] { "Name", "MedicineTypeId", "ContainerId", "DosageFormId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicineTypes_Name",
