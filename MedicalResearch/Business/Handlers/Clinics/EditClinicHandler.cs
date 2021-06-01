@@ -2,9 +2,6 @@
 using MediatR;
 using MedicalResearch.Business.Commands.Clinics;
 using MedicalResearch.Data;
-using MedicalResearch.Data.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,10 +20,9 @@ namespace MedicalResearch.Business.Handlers.Clinics
 
         public async Task<Unit> Handle(EditClinicCommand request, CancellationToken ct)
         {
-            var clinic = _mapper.Map<Clinic>(request.Model);
-            clinic.Id = request.Id;
-            clinic.UpdatedAt = DateTime.UtcNow;
-            _dbContext.Entry(clinic).State = EntityState.Modified;
+            var clinic = await _dbContext.Clinics.FindAsync(new object[] { request.Id }, ct);
+
+            _mapper.Map(request.Model, clinic);
 
             await _dbContext.SaveChangesAsync(ct);
 

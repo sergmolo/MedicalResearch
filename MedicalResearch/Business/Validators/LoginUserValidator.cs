@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MedicalResearch.Business.Commands.Auth;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Configuration;
 using MedicalResearch.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

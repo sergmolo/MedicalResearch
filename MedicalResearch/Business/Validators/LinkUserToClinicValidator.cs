@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Pipeline;
 using MedicalResearch.Data;
 using MedicalResearch.Data.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +12,7 @@ namespace MedicalResearch.Business.Validators
         public LinkUserToClinicValidator(ApplicationDbContext dbContext)
         {
             RuleFor(m => m.ClinicId)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MustAsync(async (id, ct) => await dbContext.Clinics.AsNoTracking().AnyAsync(p => p.Id == id, ct))
                 .WithMessage("Wrong clinic ID");

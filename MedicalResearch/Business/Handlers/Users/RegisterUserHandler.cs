@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using MedicalResearch.Business.Commands.Users;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Exceptions;
+using MedicalResearch.Business.Pipeline;
 using MedicalResearch.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;

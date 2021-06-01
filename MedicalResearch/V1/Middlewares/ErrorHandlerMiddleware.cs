@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using MedicalResearch.Business.Models;
+using MedicalResearch.Business.Exceptions;
+using MedicalResearch.Business.Pipeline;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace MedicalResearch.V1.Middlewares
                         break;
 
                     case BusinessLogicException e:
-                        response.StatusCode = e.NotFound ? StatusCodes.Status404NotFound : StatusCodes.Status400BadRequest;
+                        response.StatusCode = e.StatusCode;
                         responseModel = e.CommandResult;
                         break;
 

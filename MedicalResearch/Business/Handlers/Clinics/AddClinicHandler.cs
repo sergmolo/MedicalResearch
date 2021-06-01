@@ -22,8 +22,8 @@ namespace MedicalResearch.Business.Handlers.Clinics
         public async Task<Unit> Handle(AddClinicCommand request, CancellationToken ct)
         {
             var clinic = _mapper.Map<Clinic>(request.Model);
-            await _dbContext.Clinics.AddAsync(clinic, ct);
 
+            await _dbContext.Clinics.AddAsync(clinic, ct);
             await _dbContext.SaveChangesAsync(ct);
             
             return Unit.Value;

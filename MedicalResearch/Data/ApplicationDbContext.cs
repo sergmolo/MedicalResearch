@@ -8,6 +8,10 @@ namespace MedicalResearch.Data
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<Clinic> Clinics { get; set; } = default!;
+        public DbSet<DosageForm> DosageForms { get; set; } = default!;
+        public DbSet<Container> Containers { get; set; } = default!;
+        public DbSet<MedicineType> MedicineTypes { get; set; } = default!;
+        public DbSet<Medicine> Medicines { get; set; } = default!;
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -17,6 +21,7 @@ namespace MedicalResearch.Data
         {
             base.OnModelCreating(builder);
 
+            builder.HasPostgresExtension("citext");
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
             builder.Ignore<IdentityRole<int>>();

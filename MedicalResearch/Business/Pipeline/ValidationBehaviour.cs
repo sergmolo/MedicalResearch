@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
-using MedicalResearch.Business.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MedicalResearch.Business.Services
+namespace MedicalResearch.Business.Pipeline
 {
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace MedicalResearch.Business.Models
+namespace MedicalResearch.Business.Pipeline
 {
     public class CommandResult
     {
@@ -23,6 +24,11 @@ namespace MedicalResearch.Business.Models
         public static CommandResult Failed()
         {
             return new CommandResult(false);
+        }
+
+        public static CommandResult Failed(params CommandError[] errors)
+        {
+            return Failed(errors.ToList());
         }
 
         public static CommandResult Failed(IEnumerable<object> errors)

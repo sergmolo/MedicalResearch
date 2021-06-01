@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
-using MedicalResearch.Business.Models;
-using MedicalResearch.Business.Services;
+using MedicalResearch.Business.Pipeline;
+using MedicalResearch.Configuration;
 using MedicalResearch.Data;
 using MedicalResearch.Extensions;
 using MedicalResearch.V1.Middlewares;
@@ -41,7 +41,7 @@ namespace MedicalResearch
             services.AddIdentity();
 
             services.AddControllers();
-            
+
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 

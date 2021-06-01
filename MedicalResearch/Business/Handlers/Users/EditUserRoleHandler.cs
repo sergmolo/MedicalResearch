@@ -2,6 +2,7 @@
 using MedicalResearch.Business.Commands.Users;
 using MedicalResearch.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace MedicalResearch.Business.Handlers.Users
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
             user.Role = request.Role;
             user.ClinicId = null;
+            user.UpdatedAt = DateTime.UtcNow;
 
             await _userManager.UpdateAsync(user);
 
