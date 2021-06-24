@@ -45,6 +45,9 @@ namespace MedicalResearch.MapperProfiles
             CreateMap<MedicineType, MedicineTypeResponse>();
             CreateMap<Container, ContainerResponse>();
             CreateMap<DosageForm, DosageFormResponse>();
+
+            CreateMap<AddToStockRequest, Stock>();
+            CreateMap<Stock, StockResponse>();
         }
     }
 }
