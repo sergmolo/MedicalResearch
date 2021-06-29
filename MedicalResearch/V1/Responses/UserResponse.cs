@@ -10,5 +10,6 @@ namespace MedicalResearch.V1.Responses
         public string Initials { get; set; } = default!;
         public string Email { get; set; } = default!;
         public Role Role { get; set; }
+        public int? ClinicId { get; set; }
     }
 }

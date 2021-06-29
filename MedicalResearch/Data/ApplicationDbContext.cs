@@ -14,6 +14,8 @@ namespace MedicalResearch.Data
         public DbSet<Clinic> Clinics { get; set; } = default!;
         public DbSet<Supply> Supply { get; set; } = default!;
         public DbSet<Stock> Stock { get; set; } = default!;
+        public DbSet<Patient> Patients { get; set; } = default!;
+        public DbSet<Visit> Visits { get; set; } = default!;
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
