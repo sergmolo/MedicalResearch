@@ -4,6 +4,7 @@ using MedicalResearch.Data.Enums;
 using MedicalResearch.V1.Requests;
 using MedicalResearch.V1.Responses;
 using System;
+using System.Linq;
 
 namespace MedicalResearch.MapperProfiles
 {
@@ -48,6 +49,24 @@ namespace MedicalResearch.MapperProfiles
 
             CreateMap<AddToStockRequest, Stock>();
             CreateMap<Stock, StockResponse>();
+
+            CreateMap<AddPatientRequest, Patient>()
+                .ForMember(m => m.CreatedAt, o => o.MapFrom(s => DateTime.UtcNow))
+                .ForMember(m => m.Status, o => o.MapFrom(s => PatientStatus.Screened));
+
+            CreateMap<Patient, PatientInfoResponse>()
+                .ForMember(m => m.MedicineType, o => o.MapFrom(s => s.MedicineType != null ? s.MedicineType.Name : "None"))
+                .ForMember(m => m.LastVisitDate, o => o.MapFrom(s => s.Visits.OrderByDescending(v => v.Date).ToList()[0].Date));
+
+            CreateMap<Patient, PatientResponse>()
+                .ForMember(m => m.LastVisitDate, o => o.MapFrom(s => s.Visits.OrderByDescending(v => v.Date).ToList()[0].Date))
+                .ForMember(m => m.Medicines, o => o.MapFrom(s => s.Visits.Where(v => v.Medicine != null)
+                    .Select(v => new PatientMedicineResponse()
+                    {
+                        Id = v.Medicine!.Id,
+                        Name = v.Medicine.Name
+                    })
+                    .GroupBy(x => x.Id).Select(x => x.First())));
         }
     }
 }
